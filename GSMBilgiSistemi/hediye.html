@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hediye</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url("https://wallpaperaccess.com/full/2479629.jpg");
+      background-size: cover;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .profile {
+      background: rgba(255, 255, 255, 0.8); 
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="#" class="nav_logo">StarCell</a>
+      <ul class="nav_items">
+        <li class="nav_item">
+            <a href="anasayfa.html" class="nav_link">Ana Sayfa</a>
+            <a href="paketler.html" class="nav_link">Paketler</a>
+            <a href="profil.html" class="nav_link">Profil</a>
+            <a href="talep.html" class="nav_link">Talep&Şikayet</a>
+            <a href="hediye.html" class="nav_link" style="color: rgb(213, 143, 22);">Hediye Kazan</a>
+            <a href="kayit.html" class="nav_link">Login/Signup</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="profile">
+      <h2>Hediye kazanmak için hediye kutusuna tıkla!</h2>
+    </div>
+  </div>
+    <div class="gift-container">
+        <div class="shadow"></div>
+        <div class="gift-box">
+            <div class="click"></div>
+        </div>
+        <div class="text">
+            <h4 id="hediye"></h4>
+        </div>
+    </div>
+    <script type="module">
+      
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+      import { getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyA47VMlxpIeMK4N0yiovUeaKiVKOdUq774",
+        authDomain: "sistemp-bb77b.firebaseapp.com",
+        projectId: "sistemp-bb77b",
+        storageBucket: "sistemp-bb77b.appspot.com",
+        messagingSenderId: "264074766392",
+        appId: "1:264074766392:web:dc9a458fbc14b4523b1ecd"
+      };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth();
+        var username=localStorage.getItem('username');
+        const databaseRef = ref(db, 'user/');
+        if(username!="null"){
+            get(databaseRef).then((snapshot) => {
+          if (snapshot.exists()) {
+              const data = snapshot.val();
+              console.log("Alınan veri:", data);
+              var internet = data[username].int;
+              var sms = data[username].sms;
+              var dakika = data[username].dk;
+              var fee = data[username].fee;
+              var flag=localStorage.getItem('flagforgift')
+              console.log(flag)  
+            if(flag==0){
+                const randomNumber = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+                if (randomNumber == 1) {
+                  document.getElementById("hediye").innerHTML= "Tebrikler!<br>10 GB internet kazandınız!";
+                  update(ref(db, 'user/' + username),
+                {
+                  int: internet+10
+                });
+                } else if(randomNumber == 2){
+                  document.getElementById("hediye").innerHTML= "Tebrikler!<br>20 GB internet kazandınız!";
+                  update(ref(db, 'user/' + username),
+                {
+                  int: internet+20
+                });
+                } else if(randomNumber == 3){
+                  document.getElementById("hediye").innerHTML= "Tebrikler!<br>1000 sms kazandınız!";
+                  update(ref(db, 'user/' + username),
+                {
+                  sms: sms+1000
+                });
+                } else if(randomNumber == 4){
+                  document.getElementById("hediye").innerHTML= "Tebrikler!<br>1000 dakika kazandınız!";
+                  update(ref(db, 'user/' + username),
+                {
+                  dk: dakika+1000
+                });
+                } else if(randomNumber == 5){
+                  document.getElementById("hediye").innerHTML= "Tebrikler!<br>30 GB internet kazandınız!";
+                  update(ref(db, 'user/' + username),
+                {
+                  int: internet+30
+                });
+                }
+                localStorage.setItem('flagforgift',1);
+                }  
+            else if(flag==1) {
+              document.getElementById("hediye").innerHTML= "Hediye hakkınızı kullandınız!\nHediye kazanabilmek için yeni paket satın alın.";
+            }
+            
+        } else {
+              console.log("Belirtilen yol veri içermiyor.");
+            }
+        }).catch((error) => {
+            console.error("Veri alınamadı:", error);
+        });
+        
+      
+      }else if(username=="null"){
+        setTimeout(function() {
+        alert("Hediye kazanabilmek için giriş yapınız!")
+      },300);
+      }
+    
+    </script>
+    <script src="script_hediye.js"></script>
+</body>
+</html>

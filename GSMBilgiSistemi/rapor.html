@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>kurumsal</title>
+    <style>
+        .modal {
+            display: none;
+            position: absolute;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%; 
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 100px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 50px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #aaa;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <title>Kurumsal giriş</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://wallpaperaccess.com/full/2479629.jpg" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="nav">
+        <a href="#" class="nav_logo">StarCell</a>
+        <ul class="nav_items">
+          <li class="nav_item">
+            <a href="anasayfa.html" class="nav_link">Ana Sayfa</a>
+            <a href="paketler.html" class="nav_link">Paketler</a>
+            <a href="profil.html" class="nav_link">Profil</a>
+            <a href="talep.html" class="nav_link">Talep&İstek&Şikayet</a>
+            <a href="hediye.html" class="nav_link">Hediye Kazan</a>
+            <a href="kayit.html" class="nav_link" >Login/Signup</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <section class="home">
+      <div class="form_container">
+        <button class="button1" id="form_close">x</button>
+        <div class="form kurumsal_form">
+          <form action="#">
+            <h2>Kurumsal giriş</h2><br>
+            <h5>Giriş yapıldığında son ayın bilgilerini içeren kurumsal bilgilendirme raporu otomatik olarak indirilecektir.</h5>
+            <div class="input_box">
+                <input type="text" id="adminname" placeholder="Admin adı" required />
+                <i class="uil uil-envelope-alt adminad"></i>
+              </div>
+            <div class="input_box">
+              <input type="text" id="adminid" placeholder="Admin id" required />
+              <i class="uil uil-envelope-alt id"></i>
+            </div>
+            <div class="input_box">
+              <input type="text" id="adminpassword" placeholder="Admin şifre" required />
+              <i class="uil uil-envelope-alt password"></i>
+            </div>   
+            <button class="button" id="kurumsalButton">Giriş Yap</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Tebrikler! Girişiniz başarılıdır.</p>
+        </div>
+    </div>
+    <script>
+        const home = document.querySelector(".home");
+        const formContainer = document.querySelector(".form_container");
+        const formCloseBtn = document.querySelector("#form_close");
+
+        formContainer.classList.add("active");
+        home.classList.add("show");
+        formCloseBtn.addEventListener("click", () => home.classList.remove("show"));
+
+
+    </script>
+    
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCWNDSYIcXZXdsjO2sl-6wqID725TWXxfY",
+            authDomain: "kurumsal-ed013.firebaseapp.com",
+            projectId: "kurumsal-ed013",
+            storageBucket: "kurumsal-ed013.appspot.com",
+            messagingSenderId: "873297062977",
+            appId: "1:873297062977:web:b6e3348975d219b704eac0"
+        };
+        const firebaseConfig2 = {
+            apiKey: "AIzaSyA47VMlxpIeMK4N0yiovUeaKiVKOdUq774",
+            authDomain: "sistemp-bb77b.firebaseapp.com",
+            projectId: "sistemp-bb77b",
+            storageBucket: "sistemp-bb77b.appspot.com",
+            messagingSenderId: "264074766392",
+            appId: "1:264074766392:web:dc9a458fbc14b4523b1ecd"
+        };
+        const firebaseConfig3 = {
+            apiKey: "AIzaSyAyqk_j7XOQAQ3CTkmRNTXX-vpWLASOZ1k",
+            authDomain: "feedback2-1c3dc.firebaseapp.com",
+            projectId: "feedback2-1c3dc",
+            storageBucket: "feedback2-1c3dc.appspot.com",
+            messagingSenderId: "956009968952",
+            appId: "1:956009968952:web:7cf4dc6b46a200bbdd3dcd"
+        };
+
+      
+        const app3 = initializeApp(firebaseConfig3,"THIRD_APP");
+        const db3 = getDatabase(app3);
+        const databaseRef3 = ref(db3, 'feedback/');
+
+        const app2 = initializeApp(firebaseConfig2,"SECOND_APP");
+        const db2 = getDatabase(app2);
+        var username=localStorage.getItem('username');
+        const databaseRef2 = ref(db2, 'user/');
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const databaseRef = ref(db, 'kurumsal/');
+
+
+        get(databaseRef2).then((snapshot) => {
+            if (snapshot.exists()) {
+                var customerCount=0
+                var feeSum=0
+                const data = snapshot.val();
+                Object.keys(data).forEach(username => {
+                    customerCount++
+                    const userData = data[username];
+                    const fee = userData.fee;
+                    feeSum+=fee
+                    console.log("Kullanıcı ID:", username, "Fee bilgisi:", fee);
+                });
+                console.log(feeSum)
+                console.log(customerCount)
+                localStorage.setItem("feeSum",feeSum)
+                localStorage.setItem("customerCount",customerCount)
+            } else {
+                console.log("Veri bulunamadı.");
+            }
+        }).catch((error) => {
+            console.error("Veri alınamadı: ", error);
+        });
+        var kurumsalButton = document.getElementById("kurumsalButton");
+        kurumsalButton.addEventListener("click", (e) => {
+            var adminad = document.getElementById('adminname').value;
+            var adminid = document.getElementById('adminid').value;
+            var adminpassword = document.getElementById('adminpassword').value;
+            if(adminad=="admin1" || adminad=="admin2" || adminad=="admin3" ){
+                localStorage.setItem("adminad", adminad)
+                console.log(adminad)
+                get(databaseRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        console.log("Alınan veri:", data);
+                        var id = data[adminad].id;
+                        var password = data[adminad].password;
+                        if (id==adminid && password==adminpassword) {
+                            alert("Kurumsal hesaba girildi")
+                            get(databaseRef3).then((snapshot) => {
+                            if (snapshot.exists()) {
+                                const data = snapshot.val();
+                                const currentDate = new Date();
+                                const year = currentDate.getFullYear();
+                                const month = currentDate.getMonth() + 1;
+                                const day = currentDate.getDate();
+                                var myContent = "GSM Operatörü Bilgi Sistemi Kurumsal Bilgilendirme Raporu \n\n"+
+                                    year + "-" + (month-1) + "-" + day+ " tarihinden, "+year + "-" + month + "-" + day+" tarihine kadarki kullanım bilgilerini içerir.\n\n"+
+                                    "Güncel müşteri sayısı: " + localStorage.getItem("customerCount") + "\n" +
+                                    "Toplam Gelir: " + localStorage.getItem("feeSum") + " TL\n" +
+                                    "Güncel paket sayısı: 6\n" +
+                                    "Ortalama puan: " + localStorage.getItem("yıldızort") + "/5\n\n"+
+                                    "Kullanıcılardan alınan geri bildirimler: \n\n";
+
+                                Object.keys(data).forEach(feedback => {
+                                    const userData = data[feedback];
+                                    const feedbackconsole = userData.feedback;
+                                    myContent+="'" +feedbackconsole +"'"+ "\n";
+                                });
+                                function downloadTxtFile(content, filename) {
+                                        const element = document.createElement('a');
+                                        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+                                        element.setAttribute('download', filename);
+
+                                        element.style.display = 'none';
+                                        document.body.appendChild(element);
+
+                                        element.click();
+
+                                        document.body.removeChild(element);
+                                    }
+                                const myFilename = "rapor.txt";
+                                console.log(myContent);
+                                downloadTxtFile(myContent, myFilename);
+                            } else {
+                                console.log("Veri bulunamadı.");
+                            }
+                        }).catch((error) => {
+                            console.error("Veri alınamadı: ", error);
+                        });
+                        } else {
+                            alert("İşlem iptal edildi.");
+                        }
+                    }
+                });
+            }
+            
+        }); 
+        /*
+        function isFilled(passwordInput) {
+            return passwordInput.value.trim() !== "";
+        }
+        var modal = document.getElementById("myModal");
+        kurumsalButton = document.getElementById("kurumsalButton");
+        var adminid = document.getElementById("adminid");
+        var adminpassword = document.getElementById("adminpassword");
+        var adminname = document.getElementById("adminname");
+        function handleSuccess() {
+            modal.style.display = "block";
+        }
+
+        kurumsalButton.onclick = function() {
+            if (isFilled(adminid) && isFilled(adminpassword) && isFilled(adminname)) {
+                handleSuccess();
+            } else {
+                //alert("Please fill in the password fields.");
+            }
+        }
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        */
+    </script>
+  </body>
+</html>
+

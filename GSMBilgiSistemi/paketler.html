@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase Paket Seçme</title>
+<link rel="stylesheet" href="styles.css" /> 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url("https://wallpaperaccess.com/full/2479629.jpg");
+      background-size: cover;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .profile {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 100px;
+    }
+    .button {
+        background-color: #5e4caf;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 20px; 
+        cursor: pointer;
+        border-radius: 5px; 
+    }
+    .button:hover {
+      color: #e8892a;;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="#" class="nav_logo">StarCell</a>
+      <ul class="nav_items">
+        <li class="nav_item">
+          <a href="anasayfa.html" class="nav_link">Ana Sayfa</a>
+          <a href="paketler.html" class="nav_link" style="color: rgb(213, 143, 22);">Paketler</a>
+          <a href="profil.html" class="nav_link">Profil</a>
+          <a href="talep.html" class="nav_link">Talep&Şikayet</a>
+          <a href="hediye.html" class="nav_link">Hediye Kazan</a>
+          <a href="kayit.html" class="nav_link">Login/Signup</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <div class="profile">
+      <h2>Paketler</h2>
+    </div>
+  </div>
+  <section class="shop-section">
+    <div class="shop-images">
+      <div class="shop-link">
+        <h3>Paket1</h3>      
+        <p id="int1">İnternet: 3 GB</p>
+        <p id="sms1">Sms: 250</p>
+        <p id="min1">Dakika: 750 DK</p>
+        <p id="fee1">Fiyat: 160 TL</p>
+        <button class="button" id="paket1Buton">Paketi seç!</button>
+      </div>
+      <div class="shop-link">
+        <h3>Paket2</h3>
+        <p id="int2">İnternet: 6 GB</p>
+        <p id="sms2">Sms: 250</p>
+        <p id="min2">Dakika: 750 DK</p>
+        <p id="fee2">Fiyat: 185 TL</p>
+        <button class="button" id="paket2Buton">Paketi seç!</button>
+      </div>
+      <div class="shop-link">
+        <h3>Paket3</h3>
+        <p id="int3">İnternet: 9 GB</p>
+        <p id="sms3">Sms: 500</p>
+        <p id="min3">Dakika: 750 DK</p>
+        <p id="fee3">Fiyat: 220 TL</p>
+        <button class="button" id="paket3Buton">Paketi seç!</button>
+      </div>
+      <div class="shop-link">
+        <h3>Paket4</h3>
+        <p id="int4">İnternet: 12 GB</p>
+        <p id="sms4">Sms: 500</p>
+        <p id="min4">Dakika: 750 DK</p>
+        <p id="fee4">Fiyat: 245 TL</p>
+        <button class="button" id="paket4Buton">Paketi seç!</button>
+      </div>
+      <div class="shop-link">
+        <h3>Paket5</h3>
+        <p id="int5">İnternet: 15 GB</p>
+        <p id="sms5">Sms: 500</p>
+        <p id="min5">Dakika: 1000 DK</p>
+        <p id="fee5">Fiyat: 260 TL</p>
+        <button class="button" id="paket5Buton">Paketi seç!</button>
+      </div>
+      <div class="shop-link">
+        <h3>Paket6</h3>
+        <p id="int6">İnternet: 20 GB</p>
+        <p id="sms6">Sms: 500</p>
+        <p id="min6">Dakika: 1500 DK</p>
+        <p id="fee6">Fiyat: 330 TL</p>
+        <button class="button" id="paket6Buton">Paketi seç!</button>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA47VMlxpIeMK4N0yiovUeaKiVKOdUq774",
+      authDomain: "sistemp-bb77b.firebaseapp.com",
+      projectId: "sistemp-bb77b",
+      storageBucket: "sistemp-bb77b.appspot.com",
+      messagingSenderId: "264074766392",
+      appId: "1:264074766392:web:dc9a458fbc14b4523b1ecd"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth();
+    var username=localStorage.getItem('username');
+
+
+    const p1button = document.getElementById("paket1Buton");
+    p1button.addEventListener("click", (e) => {
+      e.preventDefault();
+      var username=localStorage.getItem('username')
+      if(username!="null"){
+        alert('Paket 1 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',3);
+        localStorage.setItem('sms',250);
+        localStorage.setItem('dk',750);
+        localStorage.setItem('fee',160);
+        update(ref(db, 'user/' + username),
+        {
+          int: 3.00,
+          sms: 250,
+          dk: 750,
+          fee: 160
+        });
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+
+    });  
+    const p2button = document.getElementById("paket2Buton");
+    p2button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(username!="null"){
+        alert('Paket 2 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',6);
+        localStorage.setItem('sms',250);
+        localStorage.setItem('dk',750);
+        localStorage.setItem('fee',185);
+        update(ref(db, 'user/' + username),
+        {
+          int: 6.00,
+          sms: 250,
+          dk: 750,
+          fee: 185
+      });
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+    });  
+    const p3button = document.getElementById("paket3Buton");
+    p3button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(username!="null"){
+        alert('Paket 3 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',9);
+        localStorage.setItem('sms',500);
+        localStorage.setItem('dk',750);
+        localStorage.setItem('fee',220);
+        update(ref(db, 'user/' + username),
+        {
+          int: 9.00,
+          sms: 500,
+          dk: 750,
+          fee: 220
+        });  
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+    });
+    const p4button = document.getElementById("paket4Buton");
+    p4button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(username!="null"){
+        alert('Paket 4 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',12);
+        localStorage.setItem('sms',500);
+        localStorage.setItem('dk',750);
+        localStorage.setItem('fee',245);
+        update(ref(db, 'user/' + username),
+        {
+          int: 12.00,
+          sms: 500,
+          dk: 750,
+          fee: 245
+        });      
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+    });  
+    const p5button = document.getElementById("paket5Buton");
+    p5button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(username!="null"){
+        alert('Paket 5 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',15);
+        localStorage.setItem('sms',500);
+        localStorage.setItem('dk',1000);
+        localStorage.setItem('fee',260);
+        update(ref(db, 'user/' + username),
+        {
+          int: 15.00,
+          sms: 500,
+          dk: 1000,
+          fee: 260
+        });
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+    });
+    const p6button = document.getElementById("paket6Buton");
+    p6button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(username!="null"){
+        alert('Paket 6 seçildi!')
+        localStorage.setItem('flagforgift',0);
+        localStorage.setItem('internet',20);
+        localStorage.setItem('sms',500);
+        localStorage.setItem('dk',1500);
+        localStorage.setItem('fee',330);
+        update(ref(db, 'user/' + username),
+        {
+          int: 20.00,
+          sms: 500,
+          dk: 1500,
+          fee: 330
+        });
+      } else if(username=="null"){
+        alert("Paket seçmek için giriş yapınız!")
+      }
+    });
+    
+  </script>
+</body>
+</html>

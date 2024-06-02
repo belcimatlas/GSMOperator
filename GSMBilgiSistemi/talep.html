@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request</title>
+    <style>
+        .modal {
+            display: none; 
+            position: absolute;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 100px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 50px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #aaa;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .rating {
+            unicode-bidi: bidi-override;
+            direction: rtl;
+            text-align: center;
+            position: relative;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            display: inline-block;
+            padding: 5px;
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .rating label:hover,
+        .rating label:hover ~ label,
+        .rating input:checked ~ label {
+            color: orange;
+        }
+    </style>
+
+    <title>Request</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://wallpaperaccess.com/full/2479629.jpg" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="nav">
+        <a href="#" class="nav_logo">StarCell</a>
+        <ul class="nav_items">
+          <li class="nav_item">
+            <a href="anasayfa.html" class="nav_link">Ana Sayfa</a>
+            <a href="paketler.html" class="nav_link">Paketler</a>
+            <a href="profil.html" class="nav_link">Profil</a>
+            <a href="talep.html" class="nav_link" style="color: rgb(213, 143, 22);">Talep&Şikayet</a>
+            <a href="hediye.html" class="nav_link">Hediye Kazan</a>
+            <a href="kayit.html" class="nav_link">Login/Signup</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <section class="home">
+        <div class="form_container">
+          <button class="button1" id="form_close">x</button>
+          <div class="form request_form">
+            <form action="#">
+              <h2>Talep&Şikayet</h2>
+              <div class="rating">
+                <input type="radio" id="star5" name="rating" value="5"><label for="5" id="label5">&#9733;</label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="4" id="label4">&#9733;</label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="3" id="label3">&#9733;</label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="2" id="label2">&#9733;</label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="1" id="label1">&#9733;</label>
+            </div>
+            <p id="selectedStars">Seçilen yıldız sayısı: </p>
+        
+              <div class="big_input_box">
+                <input type="text" id="requestInput" placeholder="Talep veya şikayetlerinizi girin" required />
+                <i class="uil uil-envelope-alt request"></i>
+              </div>
+              <button class="button" id="request_islem">Gönder</button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <script type="module">
+        var ort = 0;
+          var n = 0;
+          var toplam = 0;
+          const selectedStars = document.getElementById("selectedStars");
+          const ratingInputs = document.querySelectorAll('input[name="rating"]');
+          const ratingLabels = document.querySelectorAll('.rating label');
+          ratingLabels.forEach(label => {
+              label.addEventListener("click", function() {
+                  const starId = parseInt(this.getAttribute('for'));
+                  localStorage.setItem("yıldız",starId)
+                  selectedStars.textContent = "Seçilen yıldız sayısı: " + starId;
+                  toplam += starId;
+                  n++;
+                  ort = toplam/n;
+                  localStorage.setItem("yıldızort",ort)
+                  console.log(ort);
+              });
+          });
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, set, get, child} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        const firebaseConfig = {
+          apiKey: "AIzaSyAyqk_j7XOQAQ3CTkmRNTXX-vpWLASOZ1k",
+          authDomain: "feedback2-1c3dc.firebaseapp.com",
+          projectId: "feedback2-1c3dc",
+          storageBucket: "feedback2-1c3dc.appspot.com",
+          messagingSenderId: "956009968952",
+          appId: "1:956009968952:web:7cf4dc6b46a200bbdd3dcd"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        document.getElementById("request_islem").addEventListener('click', function(e){
+          set(ref(db, 'feedback/' + document.getElementById("requestInput").value),
+            {
+                feedback: document.getElementById("requestInput").value,
+                rating: localStorage.getItem("yıldız")
+            });
+        })
+
+      </script>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Geri dönüşünüz alınmıştır.</p>
+            <p>Teşekkürler!</p>
+        </div>
+      </div>
+    <script>
+        const home = document.querySelector(".home");
+        const formContainer = document.querySelector(".form_container");
+        const formCloseBtn = document.querySelector("#form_close");
+
+        formContainer.classList.add("active");
+        home.classList.add("show");
+        formCloseBtn.addEventListener("click", () => home.classList.remove("show"));
+
+        function isFilled(passwordInput) {
+            return passwordInput.value.trim() !== "";
+        }
+        var modal = document.getElementById("myModal");
+        var requestButton = document.getElementById("request_islem");
+
+        function handleSuccess() {
+            modal.style.display = "block";
+        }
+        requestButton.onclick = function() {
+            if (isFilled(requestInput)) {
+                handleSuccess();
+            } else {
+                //alert("Please fill in the password field.");
+            }
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+  </body>
+</html>

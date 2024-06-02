@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil</title>
+  <link rel="stylesheet" href="styles.css" /> 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url("https://wallpaperaccess.com/full/2479629.jpg");
+      background-size: cover;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .profile {
+      background: rgba(255, 255, 255, 0.8); 
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 100px;
+    }
+    .use {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      margin-left: -20px;
+      margin-right: -20px;
+    }    
+    .button {
+        background-color: #5e4caf;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .button:hover {
+      color: #e8892a;;
+    }
+    .modal {
+            display: none; 
+            position: absolute;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 100px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 50px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            top: 30%;
+            transform: translateY(-50%);
+        }
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #aaa;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="#" class="nav_logo">StarCell</a>
+      <ul class="nav_items">
+        <li class="nav_item">
+          <a href="anasayfa.html" class="nav_link">Ana Sayfa</a>
+          <a href="paketler.html" class="nav_link">Paketler</a>
+          <a href="profil.html" class="nav_link" style="color: rgb(213, 143, 22);">Profil</a>
+          <a href="talep.html" class="nav_link">Talep&Şikayet</a>
+          <a href="hediye.html" class="nav_link">Hediye Kazan</a>
+          <a href="kayit.html" class="nav_link">Login/Signup</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="profile">
+      <h2>Profil Bilgileri</h2>
+      <p id="username">İsim: </p>
+      <p id="surname">Soyad: </p>
+      <p id="email">Email: </p>
+      <p id="birthdate">Doğum Tarihi: </p>
+      <p id="cellno">Telefon numarası: </p>
+      <p id="address">Adres: </p>
+      <button class="button" id="logoutButton">Çıkış yap</button>
+    </div>
+  <div class="container">
+    <div class="use">
+      <h2>Kalan Kullanımlar</h2>
+      <p id="int">İnternet: </p>
+      <p id="sms">Sms: </p>
+      <p id="dk">Dakika: </p>
+      <p id="fee">Ödenecek Tutar: </p>
+      <button class="button" id="odemeButton">Fatura Öde</button>
+      <button class="button" id="faturagoruntulemeButton">Fatura Görüntüle</button>
+      <button class="button" id="faturaindirmeButton">Fatura İndir</button>
+    </div>
+  </div>
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Fatura</h2>
+        <p id="faturaBilgi"></p>
+    </div>
+</div>
+  <script>
+    const odemebutton = document.getElementById("odemeButton");
+    odemebutton.addEventListener("click", (e) => {
+      var username= localStorage.getItem("username")
+      if(username!="null"){
+        window.location.href = "odeme.html";
+      }
+    });  
+    
+
+  </script>
+  <script type="module">
+        
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA47VMlxpIeMK4N0yiovUeaKiVKOdUq774",
+      authDomain: "sistemp-bb77b.firebaseapp.com",
+      projectId: "sistemp-bb77b",
+      storageBucket: "sistemp-bb77b.appspot.com",
+      messagingSenderId: "264074766392",
+      appId: "1:264074766392:web:dc9a458fbc14b4523b1ecd"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth();
+    var username=localStorage.getItem('username');
+    const databaseRef = ref(db, 'user/');
+    
+
+    const logoutButton = document.getElementById("logoutButton");
+    logoutButton.addEventListener("click", (e) => {
+      var username= localStorage.getItem("username")
+      if(username!="null"){
+        auth.signOut()
+            .then(() => {
+                alert('user logged out');
+                localStorage.setItem('username',null);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(errorMessage);
+            });
+        window.location.href="profil.html";
+      }
+      
+    }); 
+    if(username!="null"){
+        get(databaseRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          console.log("Alınan veri:", data);
+          document.getElementById("username").innerHTML = "İsim: " + data[username].username;
+          document.getElementById("surname").innerHTML = "Soyad: " + data[username].surname;
+          document.getElementById("email").innerHTML = "Email: " + data[username].email;
+          document.getElementById("birthdate").innerHTML = "Doğum Tarihi: " + data[username].birthdate;
+          document.getElementById("cellno").innerHTML = "Telefon numarası: " + data[username].PhoneNumber;
+          document.getElementById("address").innerHTML = "Adres: " + data[username].address;
+          document.getElementById("int").innerHTML = "İnternet: " + data[username].int;
+          document.getElementById("sms").innerHTML = "Sms: " + data[username].sms;
+          document.getElementById("dk").innerHTML = "Dakika: " + data[username].dk;
+          document.getElementById("fee").innerHTML = "Ödenecek Tutar: " + data[username].fee;
+          var name = data[username].username;
+          var surname = data[username].surname;
+          var mail = data[username].email;
+          var dogum = data[username].birthdate;
+          var telefon = data[username].PhoneNumber;
+          var adres = data[username].address;
+          var internet = data[username].int;
+          var sms = data[username].sms;
+          var dakika = data[username].dk;
+          var fee = data[username].fee;
+          if(internet>0){
+            internet = internet-1;
+          }
+          if(sms>0){
+            sms= sms-15;
+          }
+          if(dakika>0){
+            dakika= dakika-20;
+          }
+          update(ref(db, 'user/' + username),
+            {
+              int: internet,
+              sms: sms,
+              dk: dakika,
+              fee: fee
+            });
+          } else {
+            console.log("Belirtilen yol veri içermiyor.");
+          }
+
+        const faturagoruntulemeButton = document.getElementById("faturagoruntulemeButton");
+        const faturaindirmeButton = document.getElementById("faturaindirmeButton");
+
+        faturagoruntulemeButton.addEventListener("click", (e) => {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "block";
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+              modal.style.display = "none";
+          }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+              modal.style.display = "none";
+            }
+        }
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1; 
+        const day = currentDate.getDate();
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
+
+        var locint=localStorage.getItem('internet');
+        var locsms=localStorage.getItem('sms');
+        var locdk=localStorage.getItem('dk');
+        var locfee=localStorage.getItem('fee');
+
+        document.getElementById("faturaBilgi").innerHTML ="Tarih: " + year + "-" + month + "-" + day+ "<br>"+"Saat: " + hours + ":" + minutes + ":" + seconds
+        +"<br><br>"+"İsim: "+name +surname +"<br>Telefon: "+telefon+"<br>Doğum Tarihi: "+dogum+"<br>Adres: "+adres+"<br>EMail Adresi: "+mail+"<br><br>Paket İçeriği<br>"
+        +"İnternet: "+locint+" GB"+"<br>Sms: "+locsms+" sms"+"<br>Dakika: "+locdk+" dakika"+"<br><br>Paket Ücreti: "+locfee+"TL"+"<br><br>Son Ödeme Tarihi: "
+        + year + "-" + (month+1) + "-" + day;
+
+        faturaindirmeButton.addEventListener("click", (e) => {
+          var username = localStorage.getItem("username")
+        function downloadTxtFile(content, filename) {
+          const element = document.createElement('a');
+          element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+          element.setAttribute('download', filename);
+
+          element.style.display = 'none';
+          document.body.appendChild(element);
+
+          element.click();
+
+          document.body.removeChild(element);
+        }
+
+        const myContent = "Fatura" +"\n\n" +
+                    "Tarih: " + year + "-" + month + "-" + day + "\n" +
+                    "Saat: " + hours + ":" + minutes + ":" + seconds + "\n\n" +
+                    "İsim: " + name + surname + "\n" +
+                    "Telefon: " + telefon + "\n" +
+                    "Doğum Tarihi: " + dogum + "\n" +
+                    "Adres: " + adres + "\n" +
+                    "EMail Adresi: " + mail + "\n\n" +
+                    "Paket İçeriği\n" +
+                    "İnternet: " + locint + " GB\n" +
+                    "Sms: " + locsms + " sms\n" +
+                    "Dakika: " + locdk + " dakika\n\n" +
+                    "Paket Ücreti: " + locfee + "TL\n\n" +
+                    "Son Ödeme Tarihi: " + year + "-" + (month+1) + "-" + day;
+        const myFilename = "dosya.txt";
+
+        downloadTxtFile(myContent, myFilename);
+        });
+        }); 
+      })
+      .catch((error) => {
+          console.error("Veri alınamadı:", error);
+
+      });
+    }  else if(username=="null"){
+      setTimeout(function() {
+      alert("Profil işlemleri için giriş yapınız!");
+    },300);
+    }
+
+    
+
+</script>
+</body>
+</html>
